@@ -35,7 +35,7 @@ tofu apply
 
 ## Требования
 
-- OpenTofu >= 1.10.0
+- OpenTofu >= 1.10.x
 - Proxmox VE 9.x
 - API token для Proxmox
 - Cloud-init template (инструкции в README)

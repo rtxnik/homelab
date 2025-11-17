@@ -45,4 +45,4 @@ secrets/
 .env.local
 
 # Lock files
-.terraform.lock.hcl
+# .terraform.lock.hcl
