@@ -1,0 +1,30 @@
+# Proxmox API Configuration
+virtual_environment_endpoint  = "https://192.168.1.10:8006"
+virtual_environment_api_token = "root@pam!terraform=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+# SSH Configuration
+ssh_public_key = "ssh-ed25519 AAAA..."
+
+# VM Configuration
+vm_count        = 1
+vm_name_prefix  = "vm"
+vm_cpu_cores    = 2
+vm_memory_mb    = 2048
+vm_disk_size_gb = 40
+
+# Template Configuration
+template_id   = 700
+template_node = "pve-compute-01"
+
+# Storage
+datastore_id = "compute-storage"
+
+# Network Configuration
+network_bridge = "vmbr0"
+dns_servers    = ["192.168.1.1", "8.8.8.8"]
+
+# Cluster Nodes (for VM distribution)
+cluster_nodes = ["pve-compute-01", "pve-compute-02", "pve-compute-03"]
+
+# Tags
+vm_tags = ["opentofu", "automated"]
