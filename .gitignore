@@ -1,0 +1,43 @@
+# OpenTofu / Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+.terraformrc
+terraform.rc
+crash.log
+crash.*.log
+
+# Override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Backup files
+*.backup
+*.bak
+
+# SSH keys
+*.pem
+*.pub
+id_rsa*
+id_ed25519*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Secrets
+secrets/
+*.secret
+.env
+.env.local
+
+# Lock files (optional - раскомментируй если не хочешь их коммитить)
+# .terraform.lock.hcl
