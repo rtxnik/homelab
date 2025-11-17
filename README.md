@@ -1,65 +1,49 @@
 # Homelab Infrastructure
 
-Автоматизация инфраструктуры домашней лаборатории с использованием OpenTofu.
+Конфигурации для автоматизации домашнего кластера Proxmox через OpenTofu.
 
-## Инфраструктура
+## Что тут есть
 
-**Кластер Proxmox:**
-- 3x HP Elite Mini 800 G9
-- Ceph Storage (distributed)
-- Network: 5 VLANs (Management, Services, Storage, IoT, DMZ)
-- Firewall: OPNsense
-- Switches: MikroTik CSS318 + Kinetic
+**Железо:**
+- 3x HP Elite Mini 800 G9 в кластере
+- Ceph для распределенного хранилища
+- 5 VLAN'ов (Management, Services, Storage, IoT, DMZ)
+- OPNsense как файрвол
+- MikroTik CSS318 + Kinetic для коммутации
 
-## Структура
+**Софт:**
+- `opentofu/single_vm/` - создание VM в Proxmox
+- `scripts/` - утилиты для работы с кластером
 
-```
-homelab/
-├── opentofu/           # Infrastructure as Code
-│   └── single_vm/     # Создание VM в Proxmox
-└── README.md
-```
-
-## OpenTofu конфигурации
-
-### single_vm
-Автоматическое создание виртуальных машин в Proxmox кластере.
-
-Подробнее: [opentofu/single_vm/README.md](opentofu/single_vm/README.md)
-
-## Требования
-
-- OpenTofu >= 1.6.0
-- Proxmox VE 8.x с подготовленным cloud-init template
-- API token для Proxmox
-
-## Быстрый старт
+## Как пользоваться
 
 ```bash
-# Clone репозитория
-git clone https://github.com/yourusername/homelab.git
+git clone https://github.com/rtxnik/homelab.git
 cd homelab/opentofu/single_vm
 
-# Настройка
+# Настроить свои параметры
 cp terraform.tfvars.example terraform.tfvars
-# Отредактируй terraform.tfvars
+vim terraform.tfvars
 
-# Запуск
+# Запустить
 tofu init
 tofu plan
 tofu apply
 ```
 
-## Связанные репозитории
+Подробности в [opentofu/single_vm/README.md](opentofu/single_vm/README.md)
 
-- **proxmox-scripts** - утилиты для Proxmox (создание templates, мониторинг, бэкапы)
+## Требования
 
-## TODO
+- OpenTofu >= 1.10.0
+- Proxmox VE 9.x
+- API token для Proxmox
+- Cloud-init template (инструкции в README)
 
-- [ ] Kubernetes cluster deployment
-- [ ] GitOps с ArgoCD
-- [ ] Мониторинг (Prometheus/Grafana)
-- [ ] Ansible интеграция для post-provisioning
+## Скрипты
+
+В `scripts/` лежат утилиты для Proxmox:
+- `create-ubuntu-template.sh` - создание Ubuntu cloud-init template
 
 ## License
 
