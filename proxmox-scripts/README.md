@@ -1,11 +1,10 @@
 # Proxmox Scripts
 
-Коллекция утилит для управления Proxmox VE кластером.
+Утилиты для работы с Proxmox кластером.
 
-## Скрипты
+## create-ubuntu-template.sh
 
-### create-ubuntu-template.sh
-Автоматическое создание Ubuntu cloud-init template для Proxmox.
+Создает Ubuntu 22.04 cloud-init template для Proxmox.
 
 **Использование:**
 ```bash
@@ -17,37 +16,12 @@
 ```
 
 **Что делает:**
-- Скачивает Ubuntu 22.04 cloud image
-- Устанавливает qemu-guest-agent
-- Создает VM с правильной конфигурацией
+- Качает Ubuntu 22.04 cloud image
+- Ставит qemu-guest-agent
+- Создает VM и конфигурирует
 - Конвертирует в template
 
-## Требования
-
-- Proxmox VE 8.x
-- Root доступ к ноде
-- Интернет для скачивания образов
-
-## Установка
-
-```bash
-# На Proxmox ноде
-git clone https://github.com/yourusername/proxmox-scripts.git
-cd proxmox-scripts
-chmod +x *.sh
-```
-
-## Связанные репозитории
-
-- **homelab** - OpenTofu конфигурации для автоматизации инфраструктуры
-
-## TODO
-
-- [ ] Скрипт мониторинга здоровья кластера
-- [ ] Автоматический бэкап VM
-- [ ] Скрипт обновления всех нод
-- [ ] Интеграция с мониторингом
-
-## License
-
-MIT
+**Требования:**
+- Proxmox VE 9.x
+- Root доступ
+- Интернет
