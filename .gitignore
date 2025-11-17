@@ -25,6 +25,11 @@ override.tf.json
 id_rsa*
 id_ed25519*
 
+# Downloaded images
+scripts/*.img
+scripts/*.iso
+scripts/*.qcow2
+
 # IDE
 .vscode/
 .idea/
@@ -39,5 +44,5 @@ secrets/
 .env
 .env.local
 
-# Lock files (optional - раскомментируй если не хочешь их коммитить)
-# .terraform.lock.hcl
+# Lock files
+.terraform.lock.hcl
