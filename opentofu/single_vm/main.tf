@@ -1,21 +1,10 @@
-locals {
-  # Распределение VM по нодам кластера
-  node_count = length(var.cluster_nodes)
-  
-  # Динамические теги с датой создания
-  vm_tags = concat(
-    var.vm_tags,
-    [formatdate("YYYY-MM", timestamp())]
-  )
-}
-
 resource "proxmox_virtual_environment_vm" "vm" {
   count = var.vm_count
 
   name        = format("%s-%02d", var.vm_name_prefix, count.index + 1)
-  node_name   = var.cluster_nodes[count.index % local.node_count]
-  description = "Managed by OpenTofu - Created: ${formatdate("YYYY-MM-DD", timestamp())}"
-  tags        = local.vm_tags
+  node_name   = var.cluster_nodes[count.index % length(var.cluster_nodes)]
+  description = "Managed by OpenTofu"
+  tags        = var.vm_tags
   on_boot     = true
   migrate     = true
 
@@ -23,7 +12,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
     vm_id     = var.template_id
     node_name = var.template_node
     retries   = 3
-    full      = false  # Linked clone для экономии места
+    full      = true
   }
 
   agent {
@@ -85,11 +74,5 @@ resource "proxmox_virtual_environment_vm" "vm" {
     ignore_changes = [
       description,
     ]
-  }
-
-  timeouts {
-    create = "10m"
-    update = "10m"
-    delete = "5m"
   }
 }
