@@ -1,0 +1,17 @@
+# <type>(<scope>): <description>
+#
+# Types:
+#   feat     - новая фича
+#   fix      - исправление
+#   docs     - документация
+#   config   - конфигурация
+#   script   - скрипты
+#   refactor - рефакторинг
+#   chore    - обновления/зависимости
+#
+# Scopes: single_vm, scripts, network, storage, k8s
+#
+# Examples:
+#   feat(single_vm): add static IP support
+#   fix(scripts): correct template validation
+#   docs: update README
