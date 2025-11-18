@@ -30,7 +30,7 @@ variable "template_node" {
 variable "vm_cpu_cores" {
   description = "Number of CPU cores per VM"
   type        = number
-  default     = 2
+  default     = 1
 }
 
 variable "vm_cpu_type" {
@@ -42,13 +42,13 @@ variable "vm_cpu_type" {
 variable "vm_memory_mb" {
   description = "Memory in MB"
   type        = number
-  default     = 2048
+  default     = 1024
 }
 
 variable "vm_disk_size_gb" {
   description = "Disk size in GB"
   type        = number
-  default     = 40
+  default     = 20
 }
 
 variable "datastore_id" {
@@ -66,7 +66,7 @@ variable "network_bridge" {
 variable "dns_servers" {
   description = "DNS servers for VMs"
   type        = list(string)
-  default     = ["192.168.1.1", "8.8.8.8"]
+  default     = ["10.0.10.1", "10.0.20.11"]
 }
 
 variable "ssh_public_key" {

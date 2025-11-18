@@ -1,5 +1,5 @@
 # Proxmox API Configuration
-virtual_environment_endpoint  = "https://192.168.1.10:8006"
+virtual_environment_endpoint  = "https://10.0.10.11:8006"
 virtual_environment_api_token = "root@pam!terraform=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 
 # SSH Configuration
@@ -8,9 +8,9 @@ ssh_public_key = "ssh-ed25519 AAAA..."
 # VM Configuration
 vm_count        = 1
 vm_name_prefix  = "vm"
-vm_cpu_cores    = 2
-vm_memory_mb    = 2048
-vm_disk_size_gb = 40
+vm_cpu_cores    = 1
+vm_memory_mb    = 1024
+vm_disk_size_gb = 20
 
 # Template Configuration
 template_id   = 700
@@ -21,7 +21,7 @@ datastore_id = "compute-storage"
 
 # Network Configuration
 network_bridge = "vmbr0"
-dns_servers    = ["192.168.1.1", "8.8.8.8"]
+dns_servers    = ["10.0.10.1", "10.0.20.11"]
 
 # Cluster Nodes (for VM distribution)
 cluster_nodes = ["pve-compute-01", "pve-compute-02", "pve-compute-03"]
