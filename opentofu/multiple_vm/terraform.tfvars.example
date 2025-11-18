@@ -1,0 +1,95 @@
+# Proxmox API Configuration
+virtual_environment_endpoint  = "https://10.0.10.11:8006"
+virtual_environment_api_token = "root@pam!terraform=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+# SSH Configuration
+ssh_public_key = "ssh-ed25519 AAAA..."
+
+# Template Configuration
+template_id   = 700
+template_node = "pve-compute-01"
+
+# Storage
+datastore_id = "compute-storage"
+
+# Network Configuration
+network_bridge  = "vmbr0"
+network_cidr    = 24
+network_gateway = "10.0.10.1"
+dns_servers     = ["10.0.10.1", "10.0.20.11"]
+
+# Common Tags
+common_tags = ["opentofu", "automated", "multiple-vm"]
+
+# VM Definitions
+# Формат: ключ = { vm_id, name, node, ip_address, cpu_cores, memory_mb, description, tags }
+vms = {
+  # pve-compute-01 VMs
+  "vm-01-small" = {
+    vm_id       = 121
+    name        = "vm-01-small"
+    node        = "pve-compute-01"
+    ip_address  = "10.0.10.21"
+    cpu_cores   = 2
+    memory_mb   = 4096
+    description = "Small VM on node 01"
+    tags        = ["small"]
+  }
+  
+  "vm-01-large" = {
+    vm_id       = 131
+    name        = "vm-01-large"
+    node        = "pve-compute-01"
+    ip_address  = "10.0.10.31"
+    cpu_cores   = 4
+    memory_mb   = 8192
+    description = "Large VM on node 01"
+    tags        = ["large"]
+  }
+
+  # pve-compute-02 VMs
+  "vm-02-small" = {
+    vm_id       = 122
+    name        = "vm-02-small"
+    node        = "pve-compute-02"
+    ip_address  = "10.0.10.22"
+    cpu_cores   = 2
+    memory_mb   = 4096
+    description = "Small VM on node 02"
+    tags        = ["small"]
+  }
+  
+  "vm-02-large" = {
+    vm_id       = 132
+    name        = "vm-02-large"
+    node        = "pve-compute-02"
+    ip_address  = "10.0.10.32"
+    cpu_cores   = 4
+    memory_mb   = 8192
+    description = "Large VM on node 02"
+    tags        = ["large"]
+  }
+
+  # pve-compute-03 VMs
+  "vm-03-small" = {
+    vm_id       = 123
+    name        = "vm-03-small"
+    node        = "pve-compute-03"
+    ip_address  = "10.0.10.23"
+    cpu_cores   = 2
+    memory_mb   = 4096
+    description = "Small VM on node 03"
+    tags        = ["small"]
+  }
+  
+  "vm-03-large" = {
+    vm_id       = 133
+    name        = "vm-03-large"
+    node        = "pve-compute-03"
+    ip_address  = "10.0.10.33"
+    cpu_cores   = 4
+    memory_mb   = 8192
+    description = "Large VM on node 03"
+    tags        = ["large"]
+  }
+}
