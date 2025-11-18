@@ -44,5 +44,8 @@ secrets/
 .env
 .env.local
 
+# Documentation files
+docs/
+
 # Lock files
 # .terraform.lock.hcl
