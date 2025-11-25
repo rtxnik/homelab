@@ -6,17 +6,21 @@
 
 Создает Ubuntu 22.04 cloud-init template для Proxmox.
 
+## create-rocky9-template.sh
+
+Создает Rocky Linux 9  cloud-init template для Proxmox.
+
 **Использование:**
 ```bash
 # На Proxmox ноде
-./create-ubuntu-template.sh [TEMPLATE_ID] [STORAGE]
+./create-osname-template.sh [TEMPLATE_ID] [STORAGE]
 
 # Пример
-./create-ubuntu-template.sh 700 compute-storage
+./create-osname-template.sh 700 compute-storage
 ```
 
 **Что делает:**
-- Качает Ubuntu 22.04 cloud image
+- Качает cloud image
 - Ставит qemu-guest-agent
 - Создает VM и конфигурирует
 - Конвертирует в template
