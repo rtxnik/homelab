@@ -1,17 +1,17 @@
 # Single VM Provisioning
 
-Создание виртуальных машин в Proxmox через OpenTofu.
+Create virtual machines in Proxmox using OpenTofu.
 
-## Что нужно
+## Requirements
 
 - OpenTofu >= 1.10.0
 - Proxmox VE >= 9.x
 - Cloud-init template
-- API token для Proxmox
+- Proxmox API token
 
-## Создание cloud-init template
+## Creating a Cloud-init Template
 
-Запустить на любой ноде Proxmox:
+Run on any Proxmox node:
 
 ```bash
 export PROXMOX_STORAGE=compute-storage
@@ -37,51 +37,51 @@ qm set 700 --serial0 socket --vga serial0
 qm template 700
 ```
 
-Или использовать скрипт из `../../scripts/create-ubuntu-template.sh`
+Or use the script from `../../proxmox-scripts/create-ubuntu-template.sh`
 
-## Настройка
+## Configuration
 
 ```bash
-# Скопировать пример переменных
+# Copy the example variables file
 cp terraform.tfvars.example terraform.tfvars
 
-# Отредактировать под задачу
+# Edit for your environment
 vim terraform.tfvars
 ```
 
-Что точно нужно поменять:
-- `virtual_environment_endpoint` - адрес Proxmox
-- `virtual_environment_api_token` - API token
-- `ssh_public_key` - SSH ключ
+Required changes:
+- `virtual_environment_endpoint` — Proxmox address
+- `virtual_environment_api_token` — API token
+- `ssh_public_key` — SSH key
 
-## API token в Proxmox
+## Creating an API Token in Proxmox
 
-Создать через WebUI:
+Via WebUI:
 ```
 Datacenter → Permissions → API Tokens → Add
 ```
 
-Или в CLI на ноде:
+Or via CLI on the node:
 ```bash
 pveum user token add root@pam terraform -privsep 0
 ```
 
-Нужные права: `PVEVMAdmin`, `PVEDatastoreUser`
+Required permissions: `PVEVMAdmin`, `PVEDatastoreUser`
 
-## Использование
+## Usage
 
 ```bash
-tofu init     # Скачать провайдеры
-tofu plan     # Посмотреть что будет создано
-tofu apply    # Создать VM
-tofu destroy  # Удалить VM
+tofu init     # Download providers
+tofu plan     # Preview what will be created
+tofu apply    # Create VMs
+tofu destroy  # Delete VMs
 ```
 
-## Что получим
+## Output
 
-После `tofu apply` увидим:
+After `tofu apply` you'll see:
 
-```
+```hcl
 vm_info = {
   "vm-01" = {
     "id"     = "pve-compute-01/qemu/100"
@@ -96,32 +96,32 @@ ssh_commands = {
 }
 ```
 
-## Основные параметры
+## Main Parameters
 
-Настраивается в `terraform.tfvars`:
+Configured in `terraform.tfvars`:
 
-| Параметр | По умолчанию | Описание |
-|----------|--------------|----------|
-| `vm_count` | 1 | Сколько VM создать |
-| `vm_cpu_cores` | 2 | Ядер CPU |
-| `vm_memory_mb` | 2048 | RAM в мегабайтах |
-| `vm_disk_size_gb` | 40 | Размер диска |
-| `template_id` | 700 | ID template для клонирования |
-| `datastore_id` | compute-storage | Где хранить диски |
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `vm_count` | 1 | Number of VMs to create |
+| `vm_cpu_cores` | 2 | CPU cores |
+| `vm_memory_mb` | 2048 | RAM in megabytes |
+| `vm_disk_size_gb` | 40 | Disk size |
+| `template_id` | 700 | Template ID for cloning |
+| `datastore_id` | compute-storage | Disk storage location |
 
-## Если что-то не работает
+## Troubleshooting
 
-**VM не получает IP:**
-- Проверить что DHCP работает в сети
-- Убедиться что qemu-guest-agent установлен в template
-- Подождать минуту-две, агент запускается не мгновенно
+**VM doesn't get an IP:**
+- Check that DHCP is working in the network
+- Ensure qemu-guest-agent is installed in the template
+- Wait a minute or two — the agent doesn't start instantly
 
-**Не клонируется template:**
-- `qm list` - проверить что template существует
-- Убедиться что он на нужной ноде
-- Проверить права API token
+**Template won't clone:**
+- `qm list` — verify the template exists
+- Make sure it's on the required node
+- Check API token permissions
 
-**Ошибка подключения к API:**
-- `curl -k https://твой-proxmox:8006/api2/json/version`
-- Проверить API token
-- Посмотреть firewall правила
+**API connection error:**
+- `curl -k https://your-proxmox:8006/api2/json/version`
+- Verify the API token
+- Check firewall rules

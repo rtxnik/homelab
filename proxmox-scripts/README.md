@@ -1,31 +1,33 @@
 # Proxmox Scripts
 
-Утилиты для работы с Proxmox кластером.
+Utilities for working with a Proxmox cluster.
 
 ## create-ubuntu-template.sh
 
-Создает Ubuntu 22.04 cloud-init template для Proxmox.
+Creates an Ubuntu 22.04 cloud-init template for Proxmox.
 
 ## create-rocky9-template.sh
 
-Создает Rocky Linux 9  cloud-init template для Proxmox.
+Creates a Rocky Linux 9 cloud-init template for Proxmox.
 
-**Использование:**
+**Usage:**
 ```bash
-# На Proxmox ноде
-./create-osname-template.sh [TEMPLATE_ID] [STORAGE]
+# On a Proxmox node
+./create-ubuntu-template.sh [TEMPLATE_ID] [STORAGE]
+./create-rocky9-template.sh [TEMPLATE_ID] [STORAGE]
 
-# Пример
-./create-osname-template.sh 700 compute-storage
+# Example
+./create-ubuntu-template.sh 700 compute-storage
+./create-rocky9-template.sh 701 compute-storage
 ```
 
-**Что делает:**
-- Качает cloud image
-- Ставит qemu-guest-agent
-- Создает VM и конфигурирует
-- Конвертирует в template
+**What it does:**
+- Downloads cloud image
+- Installs qemu-guest-agent
+- Creates VM and configures it
+- Converts to template
 
-**Требования:**
+**Requirements:**
 - Proxmox VE 9.x
-- Root доступ
-- Интернет
+- Root access
+- Internet connection
