@@ -1,43 +1,43 @@
 # Multiple VM Provisioning
 
-Развертывание нескольких виртуальных машин в Proxmox с индивидуальными параметрами для каждой VM.
+Deploy multiple virtual machines in Proxmox with individual parameters for each VM.
 
-## Отличия от single_vm
+## Differences from single_vm
 
-- ✅ Фиксированные VM ID для каждой машины
-- ✅ Статические IP адреса вместо DHCP
-- ✅ Индивидуальная конфигурация CPU/RAM для каждой VM
-- ✅ Использование `for_each` вместо `count` для гибкого управления
-- ✅ Группировка VM по нодам в outputs
+- Fixed VM IDs for each machine
+- Static IP addresses instead of DHCP
+- Individual CPU/RAM configuration for each VM
+- Uses `for_each` instead of `count` for flexible management
+- VM grouping by node in outputs
 
-## Что нужно
+## Requirements
 
 - OpenTofu >= 1.10.0
 - Proxmox VE >= 9.x
-- Cloud-init template (ID 700 по умолчанию)
-- API token для Proxmox
-- Настроенная сеть с gateway
+- Cloud-init template (ID 700 by default)
+- Proxmox API token
+- Configured network with gateway
 
-## Структура конфигурации VM
+## VM Configuration Structure
 
-Каждая VM описывается в `terraform.tfvars` как объект с параметрами:
+Each VM is described in `terraform.tfvars` as an object with parameters:
 
 ```hcl
 "vm-name" = {
-  vm_id       = 121              # Фиксированный ID в Proxmox
-  name        = "vm-01-small"    # Имя VM
-  node        = "pve-compute-01" # Нода для размещения
-  ip_address  = "10.0.10.21"     # Статический IP
-  cpu_cores   = 2                # Количество ядер CPU
-  memory_mb   = 4096             # RAM в мегабайтах
-  description = "..."            # Описание
-  tags        = ["small"]        # Дополнительные теги
+  vm_id       = 121              # Fixed ID in Proxmox
+  name        = "vm-01-small"    # VM name
+  node        = "pve-compute-01" # Node for placement
+  ip_address  = "10.0.10.21"     # Static IP
+  cpu_cores   = 2                # Number of CPU cores
+  memory_mb   = 4096             # RAM in megabytes
+  description = "..."            # Description
+  tags        = ["small"]        # Additional tags
 }
 ```
 
-## Пример конфигурации
+## Example Configuration
 
-В примере `terraform.tfvars.example` настроены 6 VM:
+The `terraform.tfvars.example` contains 6 VMs:
 
 ### pve-compute-01
 - **vm-01-small** (ID 121): 10.0.10.21, 2 CPU, 4GB RAM
@@ -51,17 +51,17 @@
 - **vm-03-small** (ID 123): 10.0.10.23, 2 CPU, 4GB RAM
 - **vm-03-large** (ID 133): 10.0.10.33, 4 CPU, 8GB RAM
 
-## Настройка
+## Setup
 
 ```bash
-# Скопировать пример переменных
+# Copy the example variables file
 cp terraform.tfvars.example terraform.tfvars
 
-# Отредактировать под свою инфраструктуру
+# Edit for your infrastructure
 vim terraform.tfvars
 ```
 
-### Обязательно настроить:
+### Required configuration:
 
 1. **Proxmox API:**
    ```hcl
@@ -69,51 +69,51 @@ vim terraform.tfvars
    virtual_environment_api_token = "root@pam!terraform=..."
    ```
 
-2. **SSH ключ:**
+2. **SSH key:**
    ```hcl
    ssh_public_key = "ssh-ed25519 AAAA..."
    ```
 
-3. **Сеть:**
+3. **Network:**
    ```hcl
-   network_gateway = "10.0.10.1"      # Gateway вашей сети
-   network_cidr    = 24                # Маска подсети
+   network_gateway = "10.0.10.1"      # Your network gateway
+   network_cidr    = 24               # Subnet mask
    dns_servers     = ["8.8.8.8", "1.1.1.1"]
    ```
 
-4. **VM конфигурация:**
-   - Отредактировать блок `vms` под свои нужды
-   - Убедиться что IP адреса не конфликтуют
-   - Проверить что VM ID свободны
+4. **VM configuration:**
+   - Edit the `vms` block for your needs
+   - Ensure IP addresses don't conflict
+   - Verify VM IDs are available
 
-## Использование
+## Usage
 
 ```bash
-# Инициализация
+# Initialize
 tofu init
 
-# Проверка плана
+# Preview the plan
 tofu plan
 
-# Создание всех VM
+# Create all VMs
 tofu apply
 
-# Создание конкретной VM
+# Create a specific VM
 tofu apply -target='proxmox_virtual_environment_vm.vm["vm-01-small"]'
 
-# Удаление конкретной VM
+# Delete a specific VM
 tofu destroy -target='proxmox_virtual_environment_vm.vm["vm-01-small"]'
 
-# Удаление всех VM
+# Delete all VMs
 tofu destroy
 ```
 
-## Output информация
+## Output Information
 
-После `tofu apply` получим:
+After `tofu apply` you'll get:
 
 ```hcl
-# Детальная информация о каждой VM
+# Detailed information about each VM
 vm_info = {
   "vm-01-small" = {
     cpu_cores  = 2
@@ -125,10 +125,10 @@ vm_info = {
     status     = "running"
     vm_id      = 121
   }
-  # ... остальные VM
+  # ... other VMs
 }
 
-# VM сгруппированные по нодам
+# VMs grouped by node
 vms_by_node = {
   "pve-compute-01" = [
     {
@@ -140,10 +140,10 @@ vms_by_node = {
     },
     # ...
   ]
-  # ... остальные ноды
+  # ... other nodes
 }
 
-# SSH команды для подключения
+# SSH commands for connection
 ssh_commands = {
   "vm-01-small" = "ssh infra@10.0.10.21"
   "vm-01-large" = "ssh infra@10.0.10.31"
@@ -151,11 +151,11 @@ ssh_commands = {
 }
 ```
 
-## Управление конфигурацией
+## Configuration Management
 
-### Добавление новой VM
+### Adding a New VM
 
-Добавить блок в `terraform.tfvars`:
+Add a block to `terraform.tfvars`:
 
 ```hcl
 "vm-04-custom" = {
@@ -170,118 +170,118 @@ ssh_commands = {
 }
 ```
 
-Затем `tofu apply`.
+Then run `tofu apply`.
 
-### Изменение параметров существующей VM
+### Modifying an Existing VM
 
-Изменить параметры в `terraform.tfvars` и выполнить `tofu apply`.
+Change the parameters in `terraform.tfvars` and run `tofu apply`.
 
-**⚠️ Внимание:** Изменение некоторых параметров требует пересоздания VM:
-- `vm_id` - пересоздание
-- `node` - пересоздание
-- `ip_address` - можно изменить без пересоздания
-- `cpu_cores`, `memory_mb` - можно изменить без пересоздания
+**Warning:** Some parameter changes require VM recreation:
+- `vm_id` — recreation required
+- `node` — recreation required
+- `ip_address` — can be changed without recreation
+- `cpu_cores`, `memory_mb` — can be changed without recreation
 
-### Удаление VM
+### Deleting a VM
 
-Удалить блок из `terraform.tfvars` и выполнить `tofu apply`, или использовать `-target` для точечного удаления.
+Remove the block from `terraform.tfvars` and run `tofu apply`, or use `-target` for targeted deletion.
 
-## Требования к сети
+## Network Requirements
 
-Для статических IP адресов необходимо:
+For static IP addresses you need:
 
-1. **Настроенная подсеть:** IP адреса должны быть в правильной подсети
-2. **Gateway:** Должен быть доступен указанный gateway
-3. **Свободные IP:** Убедитесь что IP не используются другими устройствами
-4. **VLAN (если используется):** Правильно настроенный bridge в Proxmox
+1. **Configured subnet:** IP addresses must be in the correct subnet
+2. **Gateway:** The specified gateway must be accessible
+3. **Free IPs:** Ensure IPs aren't used by other devices
+4. **VLAN (if used):** Properly configured bridge in Proxmox
 
-## Проверка перед созданием VM
+## Pre-creation Verification
 
 ```bash
-# Проверить свободные VM ID
+# Check available VM IDs
 for node in pve-compute-01 pve-compute-02 pve-compute-03; do
   echo "=== $node ==="
   ssh root@$node "qm list | grep -E '(121|131|122|132|123|133)'"
 done
 
-# Проверить доступность IP адресов
+# Check IP address availability
 for ip in 10.0.10.{21,31,22,32,23,33}; do
   echo -n "Testing $ip: "
   ping -c 1 -W 1 $ip >/dev/null 2>&1 && echo "USED" || echo "FREE"
 done
 
-# Проверить доступность gateway
+# Check gateway availability
 ping -c 3 10.0.10.1
 ```
 
-## Типичные проблемы
+## Common Issues
 
-### VM ID уже занят
+### VM ID Already Taken
 
 ```
 Error: VM with ID 121 already exists
 ```
 
-**Решение:** Выбрать другой ID или удалить существующую VM:
+**Solution:** Choose a different ID or delete the existing VM:
 ```bash
 ssh root@pve-compute-01 "qm destroy 121"
 ```
 
-### IP адрес уже используется
+### IP Address Already in Use
 
-После создания VM нет связи - возможно IP конфликт.
+No connectivity after VM creation — possible IP conflict.
 
-**Решение:**
-- Проверить `arp -a` на другом хосте в сети
-- Использовать другой IP адрес
+**Solution:**
+- Check `arp -a` on another host in the network
+- Use a different IP address
 
-### VM не получает IP
+### VM Doesn't Get IP
 
-Cloud-init не применяет конфигурацию.
+Cloud-init isn't applying configuration.
 
-**Решение:**
-- Убедиться что template содержит `cloud-init` диск
-- Проверить что в template установлен `cloud-init` пакет
-- Проверить логи: `journalctl -u cloud-init`
+**Solution:**
+- Ensure the template contains a `cloud-init` disk
+- Check that `cloud-init` package is installed in the template
+- Check logs: `journalctl -u cloud-init`
 
-### Gateway недоступен
+### Gateway Unreachable
 
-VM создана но нет связи с внешним миром.
+VM is created but has no external connectivity.
 
-**Решение:**
-- Проверить что gateway существует и доступен
-- Проверить VLAN конфигурацию
-- Проверить firewall правила в OPNsense
+**Solution:**
+- Verify the gateway exists and is accessible
+- Check VLAN configuration
+- Check firewall rules in OPNsense
 
-## Расширенное использование
+## Advanced Usage
 
-### Создание VM с разными дисками
+### Creating VMs with Different Disk Sizes
 
-Изменить `vm_disk_size_gb` можно добавив в переменную VM, но потребуется модификация `main.tf`.
+To change `vm_disk_size_gb` per VM, you'll need to modify `main.tf` to include disk size in the VM configuration.
 
-### Использование разных template
+### Using Different Templates
 
-Можно создать несколько конфигураций с разными template для разных типов VM (Ubuntu, Debian, Rocky Linux).
+You can create multiple configurations with different templates for different VM types (Ubuntu, Debian, Rocky Linux).
 
-### Интеграция с Ansible
+### Ansible Integration
 
-После создания VM использовать output `ssh_commands` для генерации Ansible inventory:
+After creating VMs, use the `ssh_commands` output to generate Ansible inventory:
 
 ```bash
 tofu output -json ssh_commands | jq -r 'to_entries[] | "\(.key) ansible_host=\(.value | split("@")[1])"'
 ```
 
-## Следующие шаги
+## Next Steps
 
-После развертывания VM:
+After deploying VMs:
 
-1. **Проверить подключение:** `ssh infra@10.0.10.21`
-2. **Установить обновления:** `sudo apt update && sudo apt upgrade -y`
-3. **Настроить мониторинг:** Prometheus node_exporter
-4. **Добавить в Ansible inventory**
-5. **Настроить backup**
+1. **Verify connection:** `ssh infra@10.0.10.21`
+2. **Install updates:** `sudo apt update && sudo apt upgrade -y`
+3. **Set up monitoring:** Prometheus node_exporter
+4. **Add to Ansible inventory**
+5. **Configure backup**
 
-## См. также
+## See Also
 
-- [../single_vm/README.md](../single_vm/README.md) - Базовая конфигурация для одной VM
-- [../../proxmox-scripts/README.md](../../proxmox-scripts/README.md) - Скрипты для Proxmox
+- [../single_vm/README.md](../single_vm/README.md) — Basic configuration for a single VM
+- [../../proxmox-scripts/README.md](../../proxmox-scripts/README.md) — Proxmox scripts
